@@ -10,6 +10,7 @@ public class Pedido {
     private int IDticket;
 
     private ArrayList<Articulo> cesta = new ArrayList<>();
+    private ArrayList<Integer> articuloCantidad = new ArrayList<>();
 
     //Constructor
     public Pedido(String nombreCliente, ArrayList<Articulo> cesta ,double porcentajeDescuento, double subtotal, double precioFinal, int IDticket) {
