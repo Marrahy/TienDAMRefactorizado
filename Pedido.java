@@ -21,6 +21,11 @@ public class Pedido {
         setIDticket(IDticket);
     }
 
+    //Constructor vacio
+    public Pedido() {
+
+    }
+
     //Setters
     public void setNombreCliente(String nombreCliente) {
         this.nombreCliente = nombreCliente;
@@ -59,5 +64,39 @@ public class Pedido {
     }
     public int getIDticket() {
         return IDticket;
+    }
+
+    //Metodos
+    public void agregarArticuloACesta(Articulo articulo) {
+        cesta.add(articulo);
+        System.out.println();
+        System.out.println("Articulo " + articulo.getNombre() + " agregado a la cesta con éxito!");   
+    }
+
+    public void quitarArticuloDeLaCesta(int posicion) {
+        cesta.remove(posicion);
+        System.out.println("El artículo ha sido eliminado con éxito!");
+    }
+
+    public void mostrarCesta() {
+        int numeroArticulo = 1;
+        for (Articulo pedidos : cesta) {
+            System.out.println("--------------------------------");
+            System.out.println("Artículo número --> " + numeroArticulo);
+            System.out.println("Nombre: " + pedidos.getNombre());
+            System.out.println("Precio: " + pedidos.getPrecio() + "$");
+            System.out.println("IVA: " + pedidos.getIVA());
+            System.out.println("Cantidad: " + pedidos.getCantidad());
+            System.out.println("--------------------------------");
+            numeroArticulo++;
+        }
+    }
+
+    public void modificarCantidad(int cantidad, int posicion)throws Exception {
+        if (cantidad <= cesta.get(posicion).getCantidad()) {
+            cesta.get(posicion).setCantidad(cantidad);
+        } else {
+            System.out.println("La cantidad es mayor al número de artículos existentes en la cesta.");
+        }
     }
 }

@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 
 public class Articulo {
 
@@ -56,11 +57,23 @@ public class Articulo {
     }
 
     //Metodos
-    public void disminuir(int cantidad) {
-        this.cantidad -= cantidad;
+    public boolean disminuir(int cantidad)throws InputMismatchException {
+        try {
+            if (cantidad <= this.cantidad) {
+                this.cantidad -= cantidad;
+                return true;
+            } else {
+                System.out.print("No hay artículos disponibles, introduce una cantidad más pequeña.");
+                System.out.println();
+                return false;
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Introduce un valor entero.");
+            return false;
+        }    
     }
 
-    public void aumentar(int cantidad) {
+    public void aumentar(int cantidad)throws Exception {
         this.cantidad += cantidad;
     }
 }

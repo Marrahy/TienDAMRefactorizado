@@ -7,12 +7,15 @@ public class TienDAM {
     //Atributos
     private static final Scanner input = new Scanner(System.in);
     private static Almacen gestionarAlmacen = new Almacen();
+    private static Pedido pedido;
     private static boolean ejecutar = true;
 
     public static void main(String[] args) {
         TienDAM inicioTienda = new TienDAM();
+
         System.out.println("¡Bienvenido a TienDAM!");
         gestionarAlmacen.cargarArticulosDeEjemplo();
+
         while(ejecutar) {
             inicioTienda.inicio();
         }
@@ -25,7 +28,6 @@ public class TienDAM {
         System.out.println("2. Crear un pedido.");
         System.out.println("3. Salir.");
         System.out.println();
-        System.out.print("Selecciona una opción: ");
     }
 
     public void menuAlmacen() {
@@ -41,21 +43,18 @@ public class TienDAM {
         System.out.println("7. Devovler artículos.");
         System.out.println("8. Salir");
         System.out.println();
-        System.out.print("Selecciona una opción: ");
     }
 
     public void menuPedido() {
         System.out.println();
-        System.out.println("Pedido seleccionado.");
+        System.out.println("1. Crear pedido.");
+        System.out.println("2. Añadir artículo a la cesta.");
+        System.out.println("3. Quitar artículo de la cesta.");
+        System.out.println("4. Modificar la cantidad de un artículo.");
+        System.out.println("5. Aplicar descuento.");
+        System.out.println("6. Realizar venta");
+        System.out.println("7. Salir.");
         System.out.println();
-        System.out.println("1. Añadir a la cesta.");
-        System.out.println("2. Quitar artículo de la cesta.");
-        System.out.println("3. Modificar la cantidad de un artículo.");
-        System.out.println("4. Aplicar descuento.");
-        System.out.println("5. Realizar venta.");
-        System.out.println("6. Salir");
-        System.out.println();
-        System.out.print("Selecciona una opción: ");
     }
 
     //Metodos
@@ -68,12 +67,13 @@ public class TienDAM {
         int opcion = -1;
         while (opcion < min || opcion > max) {
             try {
+                System.out.print("Selecciona una opción: ");
                 opcion = input.nextInt();
+                if (opcion < min || opcion > max) {
+                    System.out.println("Valor introducido no válido, escribe un valor entre " + min + " y " + max + ": ");
+                }
             } catch (InputMismatchException e) {
-                System.out.println("Introduce un valor entero.");
-                limpiarBufferScanner();
-            } catch (Exception e) {
-                System.out.println("Valor introducido no válido, escribe un valor entre " + min + " y " + max + ".");
+                System.out.println("Introduce un entero entre " + min + " y " + max + ": ");
                 limpiarBufferScanner();
             }
         }
@@ -117,7 +117,6 @@ public class TienDAM {
         System.out.println("1. Normal (21%)");
         System.out.println("2. Reducido (10%)");
         System.out.println("3. Superreducido (4%)");
-        System.out.print("Selecciona el tipo de IVA: ");
 
         int opcion = cogerOpcion(1, 3);
         Articulo.IVA tipoIVA = verificarIVA(opcion);
@@ -136,16 +135,24 @@ public class TienDAM {
         while (posicion <= 0 || posicion > gestionarAlmacen.articulos.size()) {
             try {
                 System.out.print("Introduce el número de artículo: ");
-                posicion = input.nextInt();
+                posicion = input.nextInt();    
+
+                if (gestionarAlmacen.articulos.isEmpty()) {
+                    System.out.println("El almacén está vacío.");
+                    break;
+                }
+                else if (posicion <= 0 || posicion > gestionarAlmacen.articulos.size()) {
+                    System.out.println("Introduce un valor entre " + 1 + " y " + gestionarAlmacen.articulos.size());
+                }
             } catch (Exception e) {
-                System.out.println("Valor incorrecto, introduce un número entero mayor a 0 o menor al número de artículos dsiponibles.");
+                System.out.println("Valor incorrecto, introduce un número entero mayor a 0 o menor a " + gestionarAlmacen.articulos.size());
                 limpiarBufferScanner();
             }
         }
-        return posicion - 1;
+        return posicion;
     }
 
-    //En base al input del usuario comprueba que la cantidad no sea menor a 1
+    //En base al input del usuario comprueba que la cantidad no sea menor a 1 o mayor al numero de articulos que hayan disponibles
     public int cogerCantidad() {
         int cantidad = -1;
         while (cantidad <= 0) {
@@ -164,7 +171,7 @@ public class TienDAM {
     public void gestionAlmacen() {
         while (true) {
             menuAlmacen();
-            switch (cogerOpcion(1, 5)) {
+            switch (cogerOpcion(1, 8)) {
                 case 1:
                     gestionarAlmacen.mostrarArticulos();
                     break;
@@ -179,6 +186,7 @@ public class TienDAM {
                     gestionarAlmacen.agregarArticulo(nuevoArticulo);
                     break;
                 case 4: {
+                    gestionarAlmacen.mostrarArticulos();
                     int posicion = cogerPosicion();
                     gestionarAlmacen.quitarArticulo(posicion);
                 }
@@ -224,26 +232,64 @@ public class TienDAM {
 
     //Metodo que gestiona todas las opciones que ofrece el menu gestionPedido()
     public void gestionPedido() {
-        Pedido nuevoPedido = crearNuevoPedido();
         while(true) {
             menuPedido();
-            switch (cogerOpcion(1, 5)) {
+            switch (cogerOpcion(1, 7)) {
                 case 1:
-                    gestionarAlmacen.mostrarArticulos();
-                    int posicion = cogerPosicion();
-                    int cantidad = cogerCantidad();
-
+                    pedido = crearNuevoPedido();                  
                     break;
-                case 2:
+                case 2: {
+                        gestionarAlmacen.mostrarArticulos();
+                        int posicion = cogerPosicion();
+                        int cantidad = cogerCantidad();
+                        Articulo articulo = gestionarAlmacen.articulos.get(posicion - 1);
+                        
+                        if (gestionarAlmacen.articulos.get(posicion - 1).disminuir(cantidad)) {
+                            pedido.agregarArticuloACesta(articulo);
+                        } else {
+                            System.out.println();
+                            System.out.println("No se ha podido agregar el artículo a la cesta.");
+                            System.out.println();
+                            articulo = null;
+                        }
+                    }
                     break;
-                case 3:
+                case 3: {
+                        if (pedido.getCesta().isEmpty()) {
+                            System.out.println();
+                            System.out.println("No hay artículos en la cesta.");
+                            System.out.println();
+                        } else {
+                            pedido.mostrarCesta();
+                            int posicion = cogerPosicion();
+                            pedido.getCesta().remove(posicion - 1);
+                            System.out.println();
+                            System.out.println("Artículo eliminado de la cesta con éxito!");
+                            System.out.println();
+                            if (pedido.getCesta().isEmpty()) {
+                                System.out.println("La cesta está vacía.");
+                                System.out.println();
+                            }
+                        }
+                    }
                     break;
-                case 4:
+                case 4: {
+                        pedido.mostrarCesta();
+                        int posicion = cogerPosicion();
+                        int cantidad = cogerCantidad();
+                        try {
+                            pedido.modificarCantidad(cantidad, posicion - 1);
+                        } catch (Exception e) {
+                            System.out.println("No se ha podido modificar la cantidad de artículos de la cesta.");
+                        }
+                    }
                     break;
                 case 5:
                     break;
                 case 6:
-                    return;
+                    break;
+                case 7:
+                    return;            
             }
         }
     }
