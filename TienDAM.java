@@ -38,10 +38,10 @@ public class TienDAM {
         System.out.println("2. Buscar artículos.");
         System.out.println("3. Añadir artículos.");
         System.out.println("4. Quitar artículo.");
-        System.out.println("5. Modificar precio del artículo");
+        System.out.println("5. Modificar precio del artículo.");
         System.out.println("6. Recibir artículos.");
         System.out.println("7. Devovler artículos.");
-        System.out.println("8. Salir");
+        System.out.println("8. Atrás.");
         System.out.println();
     }
 
@@ -52,8 +52,9 @@ public class TienDAM {
         System.out.println("3. Quitar artículo de la cesta.");
         System.out.println("4. Modificar la cantidad de un artículo.");
         System.out.println("5. Aplicar descuento.");
-        System.out.println("6. Realizar venta");
-        System.out.println("7. Salir.");
+        System.out.println("6. Mostrar cesta.");
+        System.out.println("7. Realizar venta.");
+        System.out.println("8. Atrás.");
         System.out.println();
     }
 
@@ -167,8 +168,26 @@ public class TienDAM {
         return cantidad;
     }
 
+    public double cogerDouble() {
+        double decimal = 0;
+        while (decimal <= 0) {
+            try {
+                System.out.print("Introduce un valor decimal: ");
+                decimal = input.nextDouble();
+            } catch (Exception e) {
+                System.out.println();
+                System.out.println("Valor decimal erróneo, introduce un valor válido.");
+                break;
+            }
+        }
+        limpiarBufferScanner();
+        return decimal;
+    }
+
     //Metodo para gestionar todas las opciones que ofrece el metodo menuAlmacen()
     public void gestionAlmacen() {
+        int posicion;
+        int cantidad;
         while (true) {
             menuAlmacen();
             switch (cogerOpcion(1, 8)) {
@@ -185,30 +204,26 @@ public class TienDAM {
                     Articulo nuevoArticulo = crearNuevoArticulo();
                     gestionarAlmacen.agregarArticulo(nuevoArticulo);
                     break;
-                case 4: {
+                case 4:
                     gestionarAlmacen.mostrarArticulos();
-                    int posicion = cogerPosicion();
+                    posicion = cogerPosicion();
                     gestionarAlmacen.quitarArticulo(posicion);
-                }
                     break;
-                case 5: {
-                    int posicion = cogerPosicion();
+                case 5:
+                    posicion = cogerPosicion();
                     System.out.print("Introduce el precio del artículo: ");
                     double precio = input.nextDouble();
                     gestionarAlmacen.modificarPrecio(posicion, precio);
-                }
                     break;
-                case 6: {
-                    int posicion = cogerPosicion();
-                    int cantidad = cogerCantidad();
+                case 6:
+                    posicion = cogerPosicion();
+                    cantidad = cogerCantidad();
                     gestionarAlmacen.recibir(posicion, cantidad);
-                }
                     break;
-                case 7: {
-                    int posicion = cogerPosicion();
-                    int cantidad = cogerCantidad();
+                case 7:
+                    posicion = cogerPosicion();
+                    cantidad = cogerCantidad();
                     gestionarAlmacen.devolver(posicion, cantidad);
-                }
                     break;
                 case 8:
                     return;
@@ -232,16 +247,19 @@ public class TienDAM {
 
     //Metodo que gestiona todas las opciones que ofrece el menu gestionPedido()
     public void gestionPedido() {
+        int posicion;
+        int cantidad;
         while(true) {
             menuPedido();
             switch (cogerOpcion(1, 7)) {
                 case 1:
                     pedido = crearNuevoPedido();                  
                     break;
-                case 2: {
+                case 2:
+                    if (pedidoEsNull(pedido)) {
                         gestionarAlmacen.mostrarArticulos();
-                        int posicion = cogerPosicion();
-                        int cantidad = cogerCantidad();
+                        posicion = cogerPosicion();
+                        cantidad = cogerCantidad();
                         Articulo articulo = gestionarAlmacen.articulos.get(posicion - 1);
                         
                         if (gestionarAlmacen.articulos.get(posicion - 1).disminuir(cantidad)) {
@@ -254,14 +272,15 @@ public class TienDAM {
                         }
                     }
                     break;
-                case 3: {
+                case 3:
+                    if (pedidoEsNull(pedido)) {
                         if (pedido.getCesta().isEmpty()) {
                             System.out.println();
                             System.out.println("No hay artículos en la cesta.");
                             System.out.println();
                         } else {
                             pedido.mostrarCesta();
-                            int posicion = cogerPosicion();
+                            posicion = cogerPosicion();
                             pedido.getCesta().remove(posicion - 1);
                             System.out.println();
                             System.out.println("Artículo eliminado de la cesta con éxito!");
@@ -273,37 +292,59 @@ public class TienDAM {
                         }
                     }
                     break;
-                case 4: {
+                case 4:
+                    if (pedidoEsNull(pedido)) {
                         pedido.mostrarCesta();
-                        int posicion = cogerPosicion();
-                        int cantidad = cogerCantidad();
+                        posicion = cogerPosicion();
+                        cantidad = cogerCantidad();
                         try {
                             pedido.modificarCantidad(cantidad, posicion - 1);
                         } catch (Exception e) {
+                            System.out.println();
                             System.out.println("No se ha podido modificar la cantidad de artículos de la cesta.");
                         }
                     }
-                    break;
+                    break;            
                 case 5:
+                    if (pedidoEsNull(pedido)) {
+                        cogerDouble();
+                    }
                     break;
                 case 6:
+                    pedido.mostrarCesta();
                     break;
                 case 7:
-                    return;            
+                    if (pedidoEsNull(pedido)) {
+
+                    }
+                    break;
+                case 8:
+                    return;
             }
         }
     }
 
+    public boolean pedidoEsNull(Pedido pedido) {
+        if (pedido == null) {
+            System.out.println();
+            System.out.println("No hay ningún pedido en proceso, crea uno para poder gestionarlo.");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public double aplicarDescuento() {
-        System.out.println("Introduce un valor de descuento: ");
-        return input.nextDouble();
+        System.out.println("Introduce un porcentaje de descuento: ");
+        double porcentajeDescuento = cogerDouble();
+        return porcentajeDescuento;
     }
 
     public double calcularSubtotal() {
-        double subtotal = 0.0;
-        //for (int i = 0; i < ; i++) {
-
-        //}
+        double subtotal = 0;
+        for (int i = 0; i < pedido.getCesta().size(); i++) {
+            subtotal += pedido.getCesta().get(i).getPrecio() * pedido.getCesta().get(i).getCantidad();
+        }
         return subtotal;
     }
 

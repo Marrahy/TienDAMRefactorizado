@@ -80,13 +80,13 @@ public class Pedido {
 
     public void mostrarCesta() {
         int numeroArticulo = 1;
-        for (Articulo pedidos : cesta) {
+        for (Articulo cesta : cesta) {
             System.out.println("--------------------------------");
             System.out.println("Artículo número --> " + numeroArticulo);
-            System.out.println("Nombre: " + pedidos.getNombre());
-            System.out.println("Precio: " + pedidos.getPrecio() + "$");
-            System.out.println("IVA: " + pedidos.getIVA());
-            System.out.println("Cantidad: " + pedidos.getCantidad());
+            System.out.println("Nombre: " + cesta.getNombre());
+            System.out.println("Precio: " + cesta.getPrecio() + "$");
+            System.out.println("IVA: " + cesta.getIVA());
+            System.out.println("Cantidad: " + cesta.getCantidad());
             System.out.println("--------------------------------");
             numeroArticulo++;
         }
@@ -96,7 +96,8 @@ public class Pedido {
         if (cantidad <= cesta.get(posicion).getCantidad()) {
             cesta.get(posicion).setCantidad(cantidad);
         } else {
-            System.out.println("La cantidad es mayor al número de artículos existentes en la cesta.");
+            System.out.println();
+            System.out.println("La cantidad es mayor al número de artículos existentes.");
         }
     }
 }
