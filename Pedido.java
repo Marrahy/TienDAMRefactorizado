@@ -7,24 +7,15 @@ public class Pedido {
     private double porcentajeDescuento;
     private double subtotal;
     private double precioFinal;
-    private int IDticket;
+    private int IDTicket;
 
     private ArrayList<Articulo> cesta = new ArrayList<>();
     private ArrayList<Integer> articuloCantidad = new ArrayList<>();
 
     //Constructor
-    public Pedido(String nombreCliente, ArrayList<Articulo> cesta ,double porcentajeDescuento, double subtotal, double precioFinal, int IDticket) {
+    public Pedido(String nombreCliente, int IDTicket) {
         setNombreCliente(nombreCliente);
-        setCesta(cesta);
-        setPorcentajeDescuento(porcentajeDescuento);
-        setSubtotal(subtotal);
-        setPrecioFinal(precioFinal);
-        setIDticket(IDticket);
-    }
-
-    //Constructor vacio
-    public Pedido() {
-
+        setIDTicket(IDTicket);
     }
 
     //Setters
@@ -43,8 +34,11 @@ public class Pedido {
     public void setPrecioFinal(double precioFinal) {
         this.precioFinal = precioFinal;
     }
-    public void setIDticket(int IDticket) {
-        this.IDticket = IDticket;
+    public void setIDTicket(int IDTicket) {
+        this.IDTicket = IDTicket;
+    }
+    public void setArticuloCantidad(ArrayList<Integer> articuloCantidad) {
+        this.articuloCantidad = articuloCantidad;
     }
 
     //Getters
@@ -63,11 +57,14 @@ public class Pedido {
     public double getPrecioFinal() {
         return precioFinal;
     }
-    public int getIDticket() {
-        return IDticket;
+    public int getIDTicket() {
+        return IDTicket;
+    }
+    public ArrayList<Integer> getArticuloCantidad() {
+        return articuloCantidad;
     }
 
-    //Metodos
+    //Metodo para agregar un Articulo en la Array de articulos de Pedido
     public void agregarArticuloACesta(Articulo articulo) {
         cesta.add(articulo);
         System.out.println();
@@ -76,21 +73,8 @@ public class Pedido {
 
     public void quitarArticuloDeLaCesta(int posicion) {
         cesta.remove(posicion);
+        System.out.println();
         System.out.println("El artículo ha sido eliminado con éxito!");
-    }
-
-    public void mostrarCesta() {
-        int numeroArticulo = 1;
-        for (Articulo cesta : cesta) {
-            System.out.println("--------------------------------");
-            System.out.println("Artículo número --> " + numeroArticulo);
-            System.out.println("Nombre: " + cesta.getNombre());
-            System.out.println("Precio: " + cesta.getPrecio() + "$");
-            System.out.println("IVA: " + cesta.getIVA());
-            System.out.println("Cantidad: " + cesta.getCantidad());
-            System.out.println("--------------------------------");
-            numeroArticulo++;
-        }
     }
 
     public void modificarCantidad(int cantidad, int posicion)throws Exception {

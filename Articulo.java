@@ -32,11 +32,7 @@ public class Articulo {
         this.tipoIVA = tipoIVA;
     }
     public void setCantidad(int cantidad){
-        if (cantidad > 0) {
-            this.cantidad = cantidad;
-        } else {
-            System.out.println("La cantidada de artículos no puede ser negativa");
-        }
+        this.cantidad = cantidad;
     }
     public void setPrecio(double precio) {
         this.precio = precio;
@@ -56,8 +52,8 @@ public class Articulo {
         return cantidad;
     }
 
-    //Metodos
-    public boolean disminuir(int cantidad)throws InputMismatchException {
+    //Metodo para disminuir la cantidad de articulos
+    public boolean disminuir(int cantidad) throws InputMismatchException {
         try {
             if (cantidad <= this.cantidad) {
                 this.cantidad -= cantidad;
@@ -73,7 +69,20 @@ public class Articulo {
         }    
     }
 
-    public void aumentar(int cantidad)throws Exception {
-        this.cantidad += cantidad;
+    //Metodo para aumentar la cantidad de articulos
+    public boolean aumentar(int cantidad) throws InputMismatchException {
+        try {
+            if (cantidad <= this.cantidad) {
+                this.cantidad += cantidad;
+                return true;
+            } else {
+                System.out.print("No hay artículos disponibles, introduce una cantidad más pequeña.");
+                System.out.println();
+                return false;
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Introduce un valor entero.");
+            return false;
+        }
     }
 }
