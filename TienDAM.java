@@ -6,7 +6,7 @@ public class TienDAM {
 
     //Atributos
     private static final Scanner input = new Scanner(System.in);
-    private static Almacen gestionarAlmacen = new Almacen();
+    private static final Almacen gestionarAlmacen = new Almacen();
     private static boolean ejecutar = true;
 
     public static void main(String[] args) {
