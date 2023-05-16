@@ -1,4 +1,3 @@
-import java.nio.file.LinkPermission;
 import java.util.ArrayList;
 
 public class Almacen {
@@ -15,7 +14,7 @@ public class Almacen {
 
     public void cargarArticulosDeEjemplo() {
         Articulo boli = new Articulo("Boli", 0.80, Articulo.IVA.NORMAL, 100);
-        Articulo platano = new Articulo("Plátano", 0.25, Articulo.IVA.REDUCIDO, 0);
+        Articulo platano = new Articulo("Plátano", 0.25, Articulo.IVA.REDUCIDO, 50);
         Articulo monitor = new Articulo("Monitor", 150, Articulo.IVA.SUPERREDUCIDO, 250);
         Articulo teclado = new Articulo("Teclado", 50, Articulo.IVA.SUPERREDUCIDO, 2);
         Articulo ordenador = new Articulo("Ordenador", 800, Articulo.IVA.NORMAL, 5);
@@ -28,6 +27,9 @@ public class Almacen {
     }
     public void mostrarArticulos() {
         System.out.println();
+        if (articulos.isEmpty()) {
+            System.out.println("El almacén está vacío.");
+        }
         int numeroArticulo = 1;
         for (Articulo articulo: articulos) {
             System.out.println("--------------------------------");
@@ -47,8 +49,8 @@ public class Almacen {
     }
 
     public void quitarArticulo(int posicion) {
-        articulos.remove(posicion);
-        System.out.println("El artículo " + articulos.get(posicion).getNombre() + " se ha eliminado.");
+        System.out.println("El artículo " + articulos.get(posicion - 1).getNombre() + " se ha eliminado.");
+        articulos.remove(posicion - 1);
     }
 
     public void modificarPrecio(int posicion, double precio) {
@@ -76,12 +78,20 @@ public class Almacen {
     }
 
     public void recibir(int posicion, int cantidad) {
-        articulos.get(posicion).disminuir(cantidad);
+        try {
+            articulos.get(posicion).aumentar(cantidad);
+        } catch (Exception e) {
+            System.out.println("Introduce un valor válido.");
+        }
         System.out.println("Se han retirado: " + cantidad + "del artículo " + articulos.get(posicion).getNombre() + ".");
     }
 
     public void devolver(int posicion, int cantidad) {
-        articulos.get(posicion).aumentar(cantidad);
+        try {
+            articulos.get(posicion).disminuir(cantidad);
+        } catch (Exception e) {
+            System.out.println("Introduce un valor válido.");
+        }
         System.out.println("Se han introducido: " + cantidad + "del artículo " + articulos.get(posicion).getNombre() + ".");
     }
 }

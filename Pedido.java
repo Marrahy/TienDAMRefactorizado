@@ -10,6 +10,7 @@ public class Pedido {
     private int IDticket;
 
     private ArrayList<Articulo> cesta = new ArrayList<>();
+    private ArrayList<Integer> articuloCantidad = new ArrayList<>();
 
     //Constructor
     public Pedido(String nombreCliente, ArrayList<Articulo> cesta ,double porcentajeDescuento, double subtotal, double precioFinal, int IDticket) {
@@ -19,6 +20,11 @@ public class Pedido {
         setSubtotal(subtotal);
         setPrecioFinal(precioFinal);
         setIDticket(IDticket);
+    }
+
+    //Constructor vacio
+    public Pedido() {
+
     }
 
     //Setters
@@ -59,5 +65,40 @@ public class Pedido {
     }
     public int getIDticket() {
         return IDticket;
+    }
+
+    //Metodos
+    public void agregarArticuloACesta(Articulo articulo) {
+        cesta.add(articulo);
+        System.out.println();
+        System.out.println("Articulo " + articulo.getNombre() + " agregado a la cesta con éxito!");   
+    }
+
+    public void quitarArticuloDeLaCesta(int posicion) {
+        cesta.remove(posicion);
+        System.out.println("El artículo ha sido eliminado con éxito!");
+    }
+
+    public void mostrarCesta() {
+        int numeroArticulo = 1;
+        for (Articulo cesta : cesta) {
+            System.out.println("--------------------------------");
+            System.out.println("Artículo número --> " + numeroArticulo);
+            System.out.println("Nombre: " + cesta.getNombre());
+            System.out.println("Precio: " + cesta.getPrecio() + "$");
+            System.out.println("IVA: " + cesta.getIVA());
+            System.out.println("Cantidad: " + cesta.getCantidad());
+            System.out.println("--------------------------------");
+            numeroArticulo++;
+        }
+    }
+
+    public void modificarCantidad(int cantidad, int posicion)throws Exception {
+        if (cantidad <= cesta.get(posicion).getCantidad()) {
+            cesta.get(posicion).setCantidad(cantidad);
+        } else {
+            System.out.println();
+            System.out.println("La cantidad es mayor al número de artículos existentes.");
+        }
     }
 }
